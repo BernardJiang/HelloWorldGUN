@@ -7,7 +7,12 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View, TextInput, Button} from 'react-native';
+import Gun from 'gun/gun.js';
+
+const gun = new Gun('http://gunjs.herokuapp.com/gun');
+
+Component.prototype.g$gun = gun;
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -18,12 +23,39 @@ const instructions = Platform.select({
 
 type Props = {};
 export default class App extends Component<Props> {
+  constructor(props){
+    super(props)
+    this.state = {
+      text: 'What is your name?',
+      name: ''
+    }
+    this.$hello = this.g$gun.get('hello')
+    let _this = this
+    this.$hello.on(function(data, key) {
+      let name=data.name
+      _this.setState({name:name})
+    })
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>Welcome to React Native!</Text>
         <Text style={styles.instructions}>To get started, edit App.js</Text>
         <Text style={styles.instructions}>{instructions}</Text>
+
+        <Text style={styles.welcome}>
+            Hello {this.state.name}
+        </Text>
+        <TextInput value={this.state.text}
+          onChangeText={(text) => this.setState({text})} 
+        />
+        <Button title='Update' 
+          onPress={()=>{
+            this.$hello.put({name:this.state.text})
+            this.setState({text:''})}}
+        />
+
       </View>
     );
   }
