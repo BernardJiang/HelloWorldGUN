@@ -8,6 +8,8 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TextInput, Button} from 'react-native';
+import 'gun-asyncstorage';
+
 import Gun from 'gun/gun.js';
 
 const gun = new Gun('http://gunjs.herokuapp.com/gun');
