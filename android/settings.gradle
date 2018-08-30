@@ -1,0 +1,3 @@
+rootProject.name = 'HelloWorldGUN'
+
+include ':app'
